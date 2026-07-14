@@ -77,7 +77,7 @@ def get_team_stories(config) -> List[StoryMetrics]:
 
     primary_jql = (
         f'project = {config.JIRA_PROJECT_KEY} AND issuetype = Story AND '
-        f'"Team[Team]" = "{config.TEAM_NAME}" ORDER BY created DESC'
+        f'"Primary Team[Team]" = "{config.TEAM_NAME}" ORDER BY created DESC'
     )
     fallback_jql = (
         f'project = {config.JIRA_PROJECT_KEY} AND issuetype = Story AND '
