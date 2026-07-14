@@ -1,8 +1,10 @@
 team_name: CS-FAAzureApps-BadAssets
-jira_project_key: YOUR_PROJECT_KEY
+jira_project_key: MASART
 output_dir: output
-automation_label_prefix: automation
+# Automation is detected via Jira Automation > Recent Rule Runs (not labels)
+automation_label_prefix: ""
 jira_custom_fields:
   story_points: customfield_10016
   sprint: customfield_10020
+  # Team is stored as a native Team field in Jira (not a label or component)
   team: customfield_10001
