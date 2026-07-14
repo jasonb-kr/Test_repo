@@ -1,7 +1,7 @@
 """QMetry enrichment for Jira story automation metadata."""
 
-from typing import List
 import logging
+from typing import List
 
 import requests
 

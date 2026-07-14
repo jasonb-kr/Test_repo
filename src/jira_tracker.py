@@ -1,7 +1,7 @@
 """Jira data retrieval and story metric extraction."""
 
-from typing import List, Optional
 import logging
+from typing import List, Optional
 
 from jira import JIRA
 

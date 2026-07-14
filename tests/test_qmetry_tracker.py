@@ -1,6 +1,8 @@
 import unittest
 from unittest.mock import Mock, patch
 
+from requests import RequestException
+
 from src.models import AutomationStatus, StoryMetrics
 from src.qmetry_tracker import enrich_with_qmetry
 
@@ -47,6 +49,27 @@ class TestQmetryTracker(unittest.TestCase):
         result = enrich_with_qmetry([story], config)
         self.assertTrue(result[0].automation.qmetry_automated)
         self.assertEqual(result[0].automation.coverage_type, "Partial")
+
+    @patch("src.qmetry_tracker.requests.get")
+    def test_defaults_false_when_qmetry_api_fails(self, mock_get):
+        config = Mock(QMETRY_API_TOKEN="token", QMETRY_URL="https://qmetry")
+        mock_get.side_effect = RequestException("boom")
+
+        story = StoryMetrics(
+            story_key="ABC-1",
+            summary="s",
+            status="Open",
+            team="T",
+            sprint="",
+            story_points=1,
+            created_date="",
+            resolved_date="",
+            automation=AutomationStatus(is_automated=False),
+        )
+
+        result = enrich_with_qmetry([story], config)
+        self.assertFalse(result[0].automation.qmetry_automated)
+        self.assertEqual(result[0].automation.coverage_type, "None")
 
 
 if __name__ == "__main__":
