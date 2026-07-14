@@ -94,6 +94,7 @@ def get_team_stories(config) -> List[StoryMetrics]:
         LOGGER.info("Primary Jira query returned %s issues", len(issues))
     except Exception as exc:
         print(f"Primary Jira JQL failed with exception:\n{traceback.format_exc()}")
+        LOGGER.exception("Primary Jira JQL failed with exception")
         LOGGER.warning("Primary JQL failed, falling back to label query: %s", exc)
         issues = []
 

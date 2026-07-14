@@ -1,9 +1,13 @@
 """Run the end-to-end Jira/QMetry to Power BI export pipeline."""
 
+import logging
+
 from src.config import load_config
 from src.jira_tracker import get_team_stories
 from src.qmetry_tracker import enrich_with_qmetry
 from src.report_exporter import export_to_powerbi
+
+LOGGER = logging.getLogger(__name__)
 
 
 def main() -> None:
@@ -13,6 +17,7 @@ def main() -> None:
     stories = get_team_stories(config)
     if not stories:
         print("WARNING: No stories returned from Jira. Check JQL queries and secrets.")
+        LOGGER.warning("No stories returned from Jira. Check JQL queries and secrets.")
     stories = enrich_with_qmetry(stories, config)
     export_to_powerbi(stories, config.OUTPUT_DIR)
 
