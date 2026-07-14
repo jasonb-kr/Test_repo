@@ -11,6 +11,8 @@ def main() -> None:
 
     config = load_config()
     stories = get_team_stories(config)
+    if not stories:
+        print("WARNING: No stories returned from Jira. Check JQL queries and secrets.")
     stories = enrich_with_qmetry(stories, config)
     export_to_powerbi(stories, config.OUTPUT_DIR)
 
