@@ -1,0 +1,8 @@
+team_name: CS-FAAzureApps-BadAssets
+jira_project_key: YOUR_PROJECT_KEY
+output_dir: output
+automation_label_prefix: automation
+jira_custom_fields:
+  story_points: customfield_10016
+  sprint: customfield_10020
+  team: customfield_10001
