@@ -79,7 +79,7 @@ def get_team_stories(config) -> List[StoryMetrics]:
 
     primary_jql = (
         f'project in ("Modernization - Accounting Sourcing ART", "Data Engineering ART") AND '
-        f'cf[10362] = "{team}" AND '
+        f'"Primary Team" = "{team}" AND '
         f'issuetype = Story ORDER BY Rank ASC'
     )
 
