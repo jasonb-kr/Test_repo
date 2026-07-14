@@ -12,7 +12,7 @@ LOGGER = logging.getLogger(__name__)
 
 def _get_story_points(issue, config) -> float:
     field_name = (config.JIRA_CUSTOM_FIELDS or {}).get("story_points", "customfield_10016")
-    return getattr(issue.fields, field_name, None) or getattr(issue.fields, "customfield_10016", 0) or 0
+    return getattr(issue.fields, field_name, None) or 0
 
 
 def _get_sprint(issue, config) -> str:
