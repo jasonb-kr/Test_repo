@@ -75,35 +75,26 @@ def get_team_stories(config) -> List[StoryMetrics]:
 
     jira_client = JIRA(server=config.JIRA_URL, basic_auth=(config.JIRA_USERNAME, config.JIRA_API_TOKEN))
 
+    team = config.TEAM_NAME
+
     primary_jql = (
-        f'project = {config.JIRA_PROJECT_KEY} AND issuetype = Story AND '
-        f'"Primary Team[Team]" = "{config.TEAM_NAME}" ORDER BY created DESC'
-    )
-    fallback_jql = (
-        f'project = {config.JIRA_PROJECT_KEY} AND issuetype = Story AND '
-        f'labels = "{config.TEAM_NAME}" ORDER BY created DESC'
+        f'project in ("Modernization - Accounting Sourcing ART", "Data Engineering ART") AND '
+        f'("Primary Team" in ({team}) OR "Dependent Team(s)" in ({team}) OR "FYI Team(s)" in ({team})) AND '
+        f'type = Story ORDER BY Rank ASC'
     )
 
     fields = "summary,status,issuelinks,labels,created,resolutiondate"
 
     try:
-        print(f"Executing primary Jira JQL: {primary_jql}")
-        LOGGER.info("Executing primary Jira JQL: %s", primary_jql)
+        print(f"Executing Jira JQL: {primary_jql}")
+        LOGGER.info("Executing Jira JQL: %s", primary_jql)
         issues = jira_client.search_issues(primary_jql, maxResults=False, fields=fields)
-        print(f"Primary Jira query returned {len(issues)} issues")
-        LOGGER.info("Primary Jira query returned %s issues", len(issues))
+        print(f"Jira query returned {len(issues)} issues")
+        LOGGER.info("Jira query returned %s issues", len(issues))
     except Exception as exc:
-        print(f"Primary Jira JQL failed with exception:\n{traceback.format_exc()}")
-        LOGGER.exception("Primary Jira JQL failed with exception")
-        LOGGER.warning("Primary JQL failed, falling back to label query: %s", exc)
+        print(f"Jira JQL failed with exception:\n{traceback.format_exc()}")
+        LOGGER.exception("Jira JQL failed with exception")
         issues = []
-
-    if not issues:
-        print(f"Executing fallback Jira JQL: {fallback_jql}")
-        LOGGER.info("Executing fallback Jira JQL: %s", fallback_jql)
-        issues = jira_client.search_issues(fallback_jql, maxResults=False, fields=fields)
-        print(f"Fallback Jira query returned {len(issues)} issues")
-        LOGGER.info("Fallback Jira query returned %s issues", len(issues))
 
     stories: List[StoryMetrics] = []
 
