@@ -1,6 +1,7 @@
 """Jira data retrieval and story metric extraction."""
 
 import logging
+import traceback
 from typing import List, Optional
 
 from jira import JIRA
@@ -86,13 +87,22 @@ def get_team_stories(config) -> List[StoryMetrics]:
     fields = "summary,status,issuelinks,labels,created,resolutiondate"
 
     try:
+        print(f"Executing primary Jira JQL: {primary_jql}")
+        LOGGER.info("Executing primary Jira JQL: %s", primary_jql)
         issues = jira_client.search_issues(primary_jql, maxResults=False, fields=fields)
+        print(f"Primary Jira query returned {len(issues)} issues")
+        LOGGER.info("Primary Jira query returned %s issues", len(issues))
     except Exception as exc:
+        print(f"Primary Jira JQL failed with exception:\n{traceback.format_exc()}")
         LOGGER.warning("Primary JQL failed, falling back to label query: %s", exc)
         issues = []
 
     if not issues:
+        print(f"Executing fallback Jira JQL: {fallback_jql}")
+        LOGGER.info("Executing fallback Jira JQL: %s", fallback_jql)
         issues = jira_client.search_issues(fallback_jql, maxResults=False, fields=fields)
+        print(f"Fallback Jira query returned {len(issues)} issues")
+        LOGGER.info("Fallback Jira query returned %s issues", len(issues))
 
     stories: List[StoryMetrics] = []
 
@@ -133,4 +143,6 @@ def get_team_stories(config) -> List[StoryMetrics]:
             )
         )
 
+    print(f"Total stories returned from Jira: {len(stories)}")
+    LOGGER.info("Total stories returned from Jira: %s", len(stories))
     return stories
