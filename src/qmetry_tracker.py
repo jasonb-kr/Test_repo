@@ -29,7 +29,7 @@ def enrich_with_qmetry(stories: List[StoryMetrics], config) -> List[StoryMetrics
         return stories
 
     headers = {
-        "Authorization": f"******",
+        "Authorization": "Bearer " + config.QMETRY_API_TOKEN,
         "Accept": "application/json",
     }
 

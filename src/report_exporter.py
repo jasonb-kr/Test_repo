@@ -28,7 +28,7 @@ def export_to_powerbi(stories: List[StoryMetrics], output_dir: str) -> None:
                 "story_points": story.story_points,
                 "created_date": story.created_date,
                 "resolved_date": story.resolved_date,
-                "defect_count": len(story.defects),
+                "defect_count": story.defect_count,
                 "is_automated": story.automation.is_automated,
                 "automation_label": story.automation.automation_label,
                 "qmetry_automated": story.automation.qmetry_automated,
